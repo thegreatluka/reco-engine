@@ -3,8 +3,8 @@ import numpy as np
 import pandas as pd
 
 app = flask.Flask(__name__)
-reco_df_load = pd.read_pickle(r"pikles\user_final_rating_df.pkl")
-sent_df_load = pd.read_pickle(r"pikles\items_by_sentiment_score.pkl")
+reco_df_load = pd.read_pickle(r"https://github.com/thegreatluka/reco-engine/blob/master/pikles/user_final_rating_df.pkl?raw=true")
+sent_df_load = pd.read_pickle(r"https://github.com/thegreatluka/reco-engine/blob/master/pikles/items_by_sentiment_score.pkl?raw=true")
 
 @app.route('/')
 def home():
