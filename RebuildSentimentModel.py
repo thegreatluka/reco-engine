@@ -3,8 +3,13 @@ from scipy.sparse import hstack
 from sklearn.feature_extraction.text import TfidfVectorizer
 import nltk
 
+'''
+Run this file to create/update the Item -> Postive Review % Mapping Dataframe (items_by_sentiment_score.pkl)
+using the chosen Logistic Regression Sentiment Model and using the whole dataset(sample30.csv)
+'''
+
 # Importing dataset and removing unneeded attributes
-reviews = pd.read_csv(r'dataset\sample30.csv')
+reviews = pd.read_csv(r'sample30.csv')
 reviews.drop(reviews.columns.difference(['reviews_title','reviews_text','user_sentiment','name']), 1, inplace=True)
 reviews["review_text_all"] = reviews["reviews_title"].astype(str) + " " + reviews["reviews_text"]
 
@@ -84,12 +89,12 @@ train_features = hstack([train_char_features, train_word_features])
 print('TF-IDF Vectorization........Done!')
 
 # Load/Deserialize Classifier
-lrc = pd.read_pickle(r"pikles\Logistic_Regression_Model.pkl")
+lrc = pd.read_pickle(r"Logistic_Regression_Model.pkl")
 lr_pred = lrc.predict(train_features)
 
 
 reviews['sentiment'] = lr_pred
-reviews['sentiment'] = reviews.apply(lambda row: 'Positive' if row['sentiment']=='1' else 'Negative', axis=1)
+reviews['sentiment'] = reviews.apply(lambda row: 'Positive' if row['sentiment']==1 else 'Negative', axis=1)
 print(reviews)
 
 temp = reviews[['name','user_sentiment','review_text_all']]
@@ -98,4 +103,4 @@ fin.columns = fin.columns.droplevel()
 fin = fin.fillna(0)
 fin['Pos%'] = fin.Positive / (fin.Positive + fin.Negative)
 print(fin)
-pd.to_pickle(fin, r'pikles\items_by_sentiment_score.pkl')
+pd.to_pickle(fin, r'items_by_sentiment_score.pkl')

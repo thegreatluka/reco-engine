@@ -1,9 +1,7 @@
 import flask
-import pandas as pd
+import model
 
 app = flask.Flask(__name__)
-reco_df_load = pd.read_pickle(r"https://github.com/thegreatluka/reco-engine/blob/master/pikles/user_final_rating_df.pkl?raw=true")
-sent_df_load = pd.read_pickle(r"https://github.com/thegreatluka/reco-engine/blob/master/pikles/items_by_sentiment_score.pkl?raw=true")
 
 @app.route('/')
 def home():
@@ -13,9 +11,10 @@ def home():
 def predict():
     if (flask.request.method == 'POST'):
         features = [x for x in flask.request.form.values()]
-        output = reco_df_load.loc[features[0]].sort_values(ascending=False)[0:20]
-        sorted_output = sent_df_load.loc[output.index.tolist()].sort_values(by='Pos%', ascending=False)[0:5]
-        res = flask.render_template('index.html', prediction_text='Product Recommendation for : {}'.format(features[0]),
+
+        sorted_output = model.predict(features[0])
+
+        res = flask.render_template('index.html', prediction_text='Product Recommendation for user : {}'.format(features[0]),
                                     tables=[sorted_output.to_html(classes='data')], titles=sorted_output.columns.values)
         return res
     else:
