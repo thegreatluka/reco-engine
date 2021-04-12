@@ -20,17 +20,6 @@ def predict():
     else:
         return flask.render_template('indexgi.html')
 
-@app.route("/predict_api", methods=['POST', 'GET'])
-def predict_api():
-    print(" request.method :",flask.request.method)
-    if (flask.request.method == 'POST'):
-        data = flask.request.get_json()
-        # res = flask.jsonify(model_load.predict([np.array(list(data.values()))]).tolist())
-        res = "Result2"
-        return res
-    else:
-        return flask.render_template('index.html')
-
 if __name__ == '__main__':
     app.debug=True
     app.run()
